@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "antd";
+import { Input, Icon } from "antd";
 import zxcvbn from "zxcvbn";
 import { InputProps } from "antd/lib/input";
 
@@ -16,7 +16,8 @@ export class PasswordInput extends React.Component<PasswordInputProps> {
     };
 
     state = {
-        level: -1
+        level: -1,
+        passwordDisplaySwitch: "password"
     };
 
     onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,12 +30,33 @@ export class PasswordInput extends React.Component<PasswordInputProps> {
             this.props.onChange(e);
         }
     };
+    
+   showPassword = (e: any) => {
+    e.preventDefault();
+    if (this.state.passwordDisplaySwitch === "password") {
+      this.setState({
+        passwordDisplaySwitch: "text"
+      });
+    } else {
+      this.setState({
+        passwordDisplaySwitch: "password"
+      });
+    }
+  };
 
     render() {
         const { settings, inputProps } = this.props;
+        const { passwordDisplaySwitch } = this.state;
         return (
             <div>
-                <Input {...inputProps} type="password" onChange={this.onChange} />
+                <Input {...inputProps} type={passwordDisplaySwitch} placeholder="Password" addonAfter={
+                  <Icon
+                    type="eye"
+                    theme="outlined"
+                    onClick={this.showPassword}
+                    style={{ userSelect: "none", cursor: "pointer" }}
+                  />
+                } onChange={this.onChange} />
                 <PasswordStrengthIndicator
                     level={this.state.level}
                     settings={settings!}
